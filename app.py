@@ -38,10 +38,10 @@ def main():
     with st.sidebar:
         st.html(f"""
         <div style="padding:10px 0 16px 0;">
-            <div style="font-size:1.8rem; font-weight:800; color:#38bdf8; display:flex; align-items:center; gap:8px;">
+            <div style="font-size:1.8rem; font-weight:800; color:#73d0ff; display:flex; align-items:center; gap:8px;">
                 <span>{APP_ICON}</span> <span>TransistorToQubit</span>
             </div>
-            <div style="font-size:0.85rem; color:#94a3b8; margin-top:4px;">
+            <div style="font-size:0.85rem; color:#a6acb8; margin-top:4px;">
                 Interactive Computing Architecture Lab
             </div>
         </div>
@@ -73,10 +73,11 @@ def main():
            Concept map, levels & noise
         """)
 
+        import sys
         st.markdown("---")
         st.markdown("### ⚙️ System Environment")
         st.caption(f"""
-        - **Conda Env:** `edc`
+        - **Python Version:** `{sys.version.split()[0]}`
         - **Qiskit Version:** `{qiskit.__version__}`
         - **Streamlit Version:** `{st.__version__}`
         - **Matplotlib:** `{matplotlib.__version__}`

@@ -162,7 +162,7 @@ def render_truth_table(gate_name, active_a, active_b=0):
   {table_html}
 </body>
 </html>"""
-    height = 140 if gate_name == "NOT" else 215
+    height = 155 if gate_name == "NOT" else 235
     components.html(frame_html, height=height)
 
 
@@ -194,31 +194,51 @@ def render_logic_gates_module():
     with col_left:
         st.markdown(f"### 🎛️ Input Controls: {selected_gate}")
         
-        # Input A Switch
+        # Input A Switch (with fallback for streamlit < 1.40)
         st.markdown("**Input A:**")
-        in_a = st.segmented_control(
-            "Input A",
-            options=[0, 1],
-            default=0,
-            key=f"gate_in_a_{selected_gate}",
-            label_visibility="collapsed",
-        )
-        if in_a is None:
-            in_a = 0
+        if hasattr(st, "segmented_control"):
+            in_a = st.segmented_control(
+                "Input A",
+                options=[0, 1],
+                default=0,
+                key=f"gate_in_a_{selected_gate}",
+                label_visibility="collapsed",
+            )
+            if in_a is None:
+                in_a = 0
+        else:
+            in_a = st.radio(
+                "Input A",
+                options=[0, 1],
+                index=0,
+                horizontal=True,
+                key=f"gate_in_a_{selected_gate}",
+                label_visibility="collapsed",
+            )
 
         # Input B Switch (if not single-input)
         in_b = 0
         if info["inputs"] == 2:
             st.markdown("**Input B:**")
-            in_b = st.segmented_control(
-                "Input B",
-                options=[0, 1],
-                default=0,
-                key=f"gate_in_b_{selected_gate}",
-                label_visibility="collapsed",
-            )
-            if in_b is None:
-                in_b = 0
+            if hasattr(st, "segmented_control"):
+                in_b = st.segmented_control(
+                    "Input B",
+                    options=[0, 1],
+                    default=0,
+                    key=f"gate_in_b_{selected_gate}",
+                    label_visibility="collapsed",
+                )
+                if in_b is None:
+                    in_b = 0
+            else:
+                in_b = st.radio(
+                    "Input B",
+                    options=[0, 1],
+                    index=0,
+                    horizontal=True,
+                    key=f"gate_in_b_{selected_gate}",
+                    label_visibility="collapsed",
+                )
 
         # Calculate Output
         out_val = compute_gate_output(selected_gate, in_a, in_b)

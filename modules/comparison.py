@@ -535,3 +535,160 @@ def _render_noise_tab():
         """
     table_html += "</tbody></table>"
     st.html(table_html)
+
+    # ── Section E: Quantum Error Correction (3-Qubit Code) ───────────
+    st.markdown("---")
+    st.markdown("#### 🛡️ Quantum Error Correction: The 3-Qubit Bit-Flip Code")
+    st.caption("How quantum computers overcome decoherence without violating the No-Cloning Theorem.")
+
+    st.html("""
+    <div style="background:rgba(56,189,248,0.06); border:1px solid rgba(56,189,248,0.25); border-radius:10px; padding:16px 20px; margin-bottom:18px;">
+        <h5 style="color:#38bdf8; margin:0 0 8px 0;">Why Classical Error Correction Fails in Quantum Systems:</h5>
+        <ul style="color:#cbd5e1; font-size:0.9rem; margin-bottom:0; padding-left:20px; line-height:1.6;">
+            <li><b>No-Cloning Theorem:</b> You cannot make a copy of an unknown quantum state <code>|ψ⟩ → |ψ⟩|ψ⟩</code>.</li>
+            <li><b>Measurement Destroys Information:</b> You cannot directly inspect a qubit to check for errors without collapsing its superposition.</li>
+            <li><b>The Quantum Solution:</b> Instead of copying, we <i>entangle</i> the logical qubit with helper qubits: <code>|ψ⟩|00⟩ → α|000⟩ + β|111⟩</code>. 
+            We measure only <b>syndrome parities</b> between qubits to locate the error without learning the state itself!</li>
+        </ul>
+    </div>
+    """)
+
+    col_qec_ctrl, col_qec_disp = st.columns([1, 2], gap="large")
+
+    with col_qec_ctrl:
+        st.markdown("**1. Select Logical Qubit Input:**")
+        qec_input = st.radio(
+            "Logical Input State:",
+            ["|0⟩ (α=1, β=0)", "|1⟩ (α=0, β=1)", "|+⟩ (Equal Superposition)"],
+            key="qec_input_state",
+        )
+
+        st.markdown("**2. Inject Noise Channel (Bit-Flip):**")
+        noise_target = st.selectbox(
+            "Bit-Flip Error Location:",
+            ["None (No Noise)", "Flip Qubit 0 (q₀)", "Flip Qubit 1 (q₁)", "Flip Qubit 2 (q₂)"],
+            key="qec_error_target",
+        )
+
+        st.markdown("---")
+        st.markdown("**Syndrome Lookup Table:**")
+        st.html("""
+        <table style="width:100%; font-family:monospace; font-size:0.8rem; background:#0b1120; border:1px solid #334155; border-radius:6px;">
+            <tr style="color:#94a3b8; border-bottom:1px solid #1e293b;">
+                <th style="padding:4px 8px;">Syndrome (s₁s₂)</th>
+                <th style="padding:4px 8px;">Diagnosis</th>
+                <th style="padding:4px 8px;">Action</th>
+            </tr>
+            <tr style="color:#22c55e;">
+                <td style="padding:4px 8px;">0 0</td>
+                <td style="padding:4px 8px;">No Error</td>
+                <td style="padding:4px 8px;">Do nothing</td>
+            </tr>
+            <tr style="color:#38bdf8;">
+                <td style="padding:4px 8px;">1 0</td>
+                <td style="padding:4px 8px;">Error on q₀</td>
+                <td style="padding:4px 8px;">Apply X(q₀)</td>
+            </tr>
+            <tr style="color:#f59e0b;">
+                <td style="padding:4px 8px;">1 1</td>
+                <td style="padding:4px 8px;">Error on q₁</td>
+                <td style="padding:4px 8px;">Apply X(q₁)</td>
+            </tr>
+            <tr style="color:#ec4899;">
+                <td style="padding:4px 8px;">0 1</td>
+                <td style="padding:4px 8px;">Error on q₂</td>
+                <td style="padding:4px 8px;">Apply X(q₂)</td>
+            </tr>
+        </table>
+        """)
+
+    with col_qec_disp:
+        # Determine syndrome and state progression
+        if "None" in noise_target:
+            error_q = -1
+            syndrome = "00"
+            diag = "No error detected"
+            action = "None needed"
+            badge_c = "#22c55e"
+        elif "q₀" in noise_target:
+            error_q = 0
+            syndrome = "10"
+            diag = "Bit-flip on Qubit 0 (q₀)"
+            action = "Apply X gate to q₀"
+            badge_c = "#38bdf8"
+        elif "q₁" in noise_target:
+            error_q = 1
+            syndrome = "11"
+            diag = "Bit-flip on Qubit 1 (q₁)"
+            action = "Apply X gate to q₁"
+            badge_c = "#f59e0b"
+        else:
+            error_q = 2
+            syndrome = "01"
+            diag = "Bit-flip on Qubit 2 (q₂)"
+            action = "Apply X gate to q₂"
+            badge_c = "#ec4899"
+
+        # Format Dirac representations
+        if "|0⟩" in qec_input:
+            encoded_str = "|000⟩"
+            if error_q == 0:
+                noisy_str = "|100⟩"
+            elif error_q == 1:
+                noisy_str = "|010⟩"
+            elif error_q == 2:
+                noisy_str = "|001⟩"
+            else:
+                noisy_str = "|000⟩"
+            recovered_str = "|000⟩ (Decodes to |0⟩)"
+        elif "|1⟩" in qec_input:
+            encoded_str = "|111⟩"
+            if error_q == 0:
+                noisy_str = "|011⟩"
+            elif error_q == 1:
+                noisy_str = "|101⟩"
+            elif error_q == 2:
+                noisy_str = "|110⟩"
+            else:
+                noisy_str = "|111⟩"
+            recovered_str = "|111⟩ (Decodes to |1⟩)"
+        else:
+            encoded_str = "(|000⟩ + |111⟩)/√2"
+            if error_q == 0:
+                noisy_str = "(|100⟩ + |011⟩)/√2"
+            elif error_q == 1:
+                noisy_str = "(|010⟩ + |101⟩)/√2"
+            elif error_q == 2:
+                noisy_str = "(|001⟩ + |110⟩)/√2"
+            else:
+                noisy_str = "(|000⟩ + |111⟩)/√2"
+            recovered_str = "(|000⟩ + |111⟩)/√2 (Decodes to |+⟩)"
+
+        st.html(f"""
+        <div class="glass-card" style="padding:18px 22px;">
+            <div style="font-size:0.85rem; color:#94a3b8; text-transform:uppercase; margin-bottom:12px;">Step-by-Step Quantum Error Correction Pipeline</div>
+            
+            <div style="display:flex; flex-direction:column; gap:12px; font-family:'JetBrains Mono', monospace;">
+                <div style="background:rgba(30,41,59,0.7); padding:10px 14px; border-radius:8px; border-left:3px solid #38bdf8;">
+                    <span style="color:#94a3b8; font-size:0.8rem;">1. ENCODING (CNOT gates):</span><br/>
+                    <b style="color:#38bdf8; font-size:1.1rem;">|ψ_encoded⟩ = {encoded_str}</b>
+                </div>
+                
+                <div style="background:rgba(30,41,59,0.7); padding:10px 14px; border-radius:8px; border-left:3px solid {'#22c55e' if error_q == -1 else '#f43f5e'};">
+                    <span style="color:#94a3b8; font-size:0.8rem;">2. NOISY CHANNEL (Bit-flip strike):</span><br/>
+                    <b style="color:{'#22c55e' if error_q == -1 else '#f43f5e'}; font-size:1.1rem;">|ψ_noisy⟩ = {noisy_str}</b>
+                </div>
+
+                <div style="background:rgba(30,41,59,0.7); padding:10px 14px; border-radius:8px; border-left:3px solid {badge_c};">
+                    <span style="color:#94a3b8; font-size:0.8rem;">3. SYNDROME MEASUREMENT (Ancilla parities):</span><br/>
+                    <span style="color:#f8fafc;">Measured syndrome <b>s₁s₂ = {syndrome}</b> &rarr; <span style="color:{badge_c}; font-weight:bold;">{diag}</span></span>
+                </div>
+
+                <div style="background:rgba(34,197,94,0.12); padding:10px 14px; border-radius:8px; border:1px solid rgba(34,197,94,0.5);">
+                    <span style="color:#94a3b8; font-size:0.8rem;">4. RECOVERY CORRECTION (Targeted Pauli-X):</span><br/>
+                    <span style="color:#cbd5e1; font-size:0.85rem;">Action: {action}</span><br/>
+                    <b style="color:#4ade80; font-size:1.15rem;">|ψ_recovered⟩ = {recovered_str} &bull; 100% RECOVERED! 🎉</b>
+                </div>
+            </div>
+        </div>
+        """)

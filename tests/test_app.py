@@ -117,8 +117,19 @@ def test_quantum_circuits():
     print("✅ Quantum Circuits, Gates, and Bell State tests passed.")
 
 
+def test_comparison():
+    print("Testing Module D Comparison tables & progressions...")
+    from modules.comparison import CONCEPT_MAP, LEVELS
+    assert len(CONCEPT_MAP) >= 10, "Concept map missing items"
+    assert len(LEVELS) == 4, "4-level learning progression incomplete"
+    for lvl in LEVELS:
+        assert "classical" in lvl and "quantum" in lvl and "transition" in lvl
+    print("✅ Comparison Module test passed.")
+
+
 if __name__ == "__main__":
     test_transistor_svg()
     test_logic_gates()
     test_quantum_circuits()
+    test_comparison()
     print("\n🎉 ALL TESTS PASSED SUCCESSFULLY!")
