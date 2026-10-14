@@ -48,12 +48,15 @@ def main():
         """)
 
         st.markdown("### 🧭 Navigation")
+        # Initialise navigation target if not already set
+        if "nav_module" not in st.session_state:
+            st.session_state["nav_module"] = "module1"
         selected_module_key = st.radio(
             "Select Module:",
             options=list(MODULES),
             format_func=lambda k: MODULES[k]["title"],
-            index=0,
             label_visibility="collapsed",
+            key="nav_module",
         )
 
         st.markdown("---")

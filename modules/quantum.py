@@ -35,16 +35,15 @@ def render_quantum_module():
 
     mode = st.radio(
         "Choose Quantum Exploration Mode:",
-        ["🔬 Single-Qubit Gate Explorer (X, H, Z, M)", "⚡ Two-Qubit CNOT & Entanglement (Bell States)", "🛠️ Custom Multi-Gate Circuit Builder"],
+        ["🔬 Single-Qubit Gate Explorer (X, H, Z, M)", "⚡ Two-Qubit CNOT & Entanglement (Bell States)"],
         horizontal=True,
+        key="quantum_mode",
     )
 
     if mode.startswith("🔬 Single-Qubit"):
         render_single_qubit_explorer()
-    elif mode.startswith("⚡ Two-Qubit"):
-        render_cnot_explorer()
     else:
-        render_custom_circuit_builder()
+        render_cnot_explorer()
 
 
 def render_single_qubit_explorer():
@@ -58,10 +57,11 @@ def render_single_qubit_explorer():
         st.markdown("**1. Select Initial Quantum State:**")
         initial_state = st.radio(
             "Initial State:",
-            ["|0⟩", "|1⟩", "|+⟩", "|-⟩"],
+            ["|0⟩", "|1⟩"],
             horizontal=True,
             index=0,
-            help="|0⟩ is the ground state, |1⟩ is excited state, |+⟩ and |-⟩ are superpositions.",
+            key="quantum_init_state",
+            help="|0⟩ is the ground state, |1⟩ is the excited state.",
         )
 
         # 2. Gate selection
@@ -71,8 +71,10 @@ def render_single_qubit_explorer():
             ["X", "H", "Z", "M"],
             horizontal=True,
             index=0,
+            key="quantum_gate_choice",
             format_func=lambda g: f"{g} Gate" if g != "M" else "Measurement (M)",
         )
+
 
         # 3. Measurement toggle (if gate is not already M)
         with_measurement = True
@@ -207,76 +209,4 @@ def render_cnot_explorer():
             plt.close(fig_bloch)
 
 
-def render_custom_circuit_builder():
-    """Interactive multi-gate pipeline builder."""
-    st.markdown("### 🛠️ Custom Quantum Circuit Sandbox")
-    st.caption("Construct a sequential quantum circuit by selecting operations:")
 
-    if "custom_gates" not in st.session_state:
-        st.session_state["custom_gates"] = [("H", 0), ("CNOT", (0, 1))]
-
-    col_add, col_disp = st.columns([1, 2], gap="large")
-
-    with col_add:
-        st.markdown("#### Add Gate to Sequence")
-        gate_type = st.selectbox("Gate Type:", ["H", "X", "Z", "CNOT", "Measurement"])
-        
-        if gate_type == "CNOT":
-            q_target = st.radio("Target Qubit (Control is q₀):", [1], horizontal=True)
-            qubit_arg = (0, 1)
-        elif gate_type == "Measurement":
-            qubit_arg = st.selectbox("Measure Qubit:", [0, 1, "Both"])
-        else:
-            qubit_arg = st.radio("Apply to Qubit:", [0, 1], horizontal=True)
-
-        if st.button("➕ Add Gate", use_container_width=True):
-            st.session_state["custom_gates"].append((gate_type, qubit_arg))
-            st.rerun()
-
-        if st.button("🗑️ Reset Circuit", use_container_width=True):
-            st.session_state["custom_gates"] = []
-            st.rerun()
-
-        st.markdown("##### Current Gate Sequence:")
-        for idx, (g, q) in enumerate(st.session_state["custom_gates"]):
-            st.text(f"{idx + 1}. {g} on qubit {q}")
-
-    with col_disp:
-        # Build custom circuit
-        qc = QuantumCircuit(2, 2)
-        has_meas = False
-        
-        for g, q in st.session_state["custom_gates"]:
-            if g == "H":
-                qc.h(q)
-            elif g == "X":
-                qc.x(q)
-            elif g == "Z":
-                qc.z(q)
-            elif g == "CNOT":
-                qc.cx(q[0], q[1])
-            elif g == "Measurement":
-                has_meas = True
-                if q == "Both":
-                    qc.measure([0, 1], [0, 1])
-                else:
-                    qc.measure(q, q)
-
-        st.markdown("#### 📐 Assembled Quantum Circuit")
-        fig_custom = draw_circuit_mpl(qc)
-        st.pyplot(fig_custom)
-        plt.close(fig_custom)
-
-        # Simulation
-        if has_meas:
-            st.markdown("#### 📊 Aer Simulation Results")
-            counts, fig_hist = run_aer_simulation(qc, shots=1024)
-            st.pyplot(fig_hist)
-            plt.close(fig_hist)
-        else:
-            sv = Statevector.from_instruction(qc)
-            st.markdown("#### 🌊 Statevector |ψ⟩")
-            st.latex(r"|\psi\rangle = " + format_statevector_latex(sv, num_qubits=2))
-            fig_bloch = draw_bloch_sphere(sv)
-            st.pyplot(fig_bloch)
-            plt.close(fig_bloch)

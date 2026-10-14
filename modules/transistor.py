@@ -57,43 +57,19 @@ def render_transistor_module():
     </div>
     """)
 
-    # Preset Quick Buttons
-    col_p1, col_p2, col_p3, col_p4 = st.columns(4)
+    # Quick switching demo buttons — directly demonstrate transistor switching
+    col_p1, col_p2 = st.columns(2)
     with col_p1:
-        if st.button("🔴 Set to OFF (Cutoff)", use_container_width=True):
+        if st.button("🔴 Set to OFF (Cutoff — V_in below threshold)", use_container_width=True):
             st.session_state["trans_v_in"] = 0.2
             st.session_state["slider_v_in"] = 0.2
             st.session_state["num_v_in"] = 0.2
             st.rerun()
     with col_p2:
-        if st.button("🟢 Set to ON (Saturation)", use_container_width=True):
+        if st.button("🟢 Set to ON (Saturation — V_in above threshold)", use_container_width=True):
             st.session_state["trans_v_in"] = 3.3
             st.session_state["slider_v_in"] = 3.3
             st.session_state["num_v_in"] = 3.3
-            st.rerun()
-    with col_p3:
-        if st.button("⚙️ BJT Preset (Vth = 0.7V)", use_container_width=True):
-            st.session_state["trans_v_th"] = 0.7
-            st.session_state["slider_v_th"] = 0.7
-            st.session_state["num_v_th"] = 0.7
-            st.session_state["trans_v_in"] = 2.5
-            st.session_state["slider_v_in"] = 2.5
-            st.session_state["num_v_in"] = 2.5
-            st.session_state["trans_r_l"] = 1000.0
-            st.session_state["slider_r_l"] = 1000.0
-            st.session_state["num_r_l"] = 1000.0
-            st.rerun()
-    with col_p4:
-        if st.button("⚡ MOSFET Preset (Vth = 2.0V)", use_container_width=True):
-            st.session_state["trans_v_th"] = 2.0
-            st.session_state["slider_v_th"] = 2.0
-            st.session_state["num_v_th"] = 2.0
-            st.session_state["trans_v_in"] = 4.0
-            st.session_state["slider_v_in"] = 4.0
-            st.session_state["num_v_in"] = 4.0
-            st.session_state["trans_r_l"] = 2000.0
-            st.session_state["slider_r_l"] = 2000.0
-            st.session_state["num_r_l"] = 2000.0
             st.rerun()
 
     # Layout: Controls on Left, Visualizations on Right
@@ -215,39 +191,12 @@ def render_transistor_module():
                 args=("i_c_max", "num"),
             )
 
-        # 5. Supply Voltage (V_CC)
-        st.markdown("**5. Collector Supply Voltage ($V_{CC}$)**")
-        c1, c2 = st.columns([2, 1])
-        with c1:
-            st.slider(
-                "Supply Voltage Slider (V)",
-                min_value=2.0,
-                max_value=12.0,
-                value=float(st.session_state["trans_v_cc"]),
-                step=0.5,
-                key="slider_v_cc",
-                label_visibility="collapsed",
-                on_change=sync_param,
-                args=("v_cc", "slider"),
-            )
-        with c2:
-            st.number_input(
-                "Supply Voltage Num (V)",
-                min_value=2.0,
-                max_value=12.0,
-                value=float(st.session_state["trans_v_cc"]),
-                step=0.5,
-                key="num_v_cc",
-                label_visibility="collapsed",
-                on_change=sync_param,
-                args=("v_cc", "num"),
-            )
 
     # Physics Calculation Engine
     v_in = float(st.session_state["trans_v_in"])
     v_th = float(st.session_state["trans_v_th"])
-    r_l = float(st.session_state["trans_r_l"])
-    v_cc = float(st.session_state["trans_v_cc"])
+    r_l  = float(st.session_state["trans_r_l"])
+    v_cc = 5.0  # Fixed supply voltage (V) — standard digital logic rail
     i_c_limit = float(st.session_state["trans_i_c_max"]) / 1000.0  # in Amperes
     r_b = 10000.0  # 10 kΩ base resistor
     v_ce_sat = 0.2  # Saturation voltage (V)
@@ -337,96 +286,6 @@ def render_transistor_module():
         st.markdown("#### ⚡ Dynamic Circuit Schematic")
         svg_code = generate_transistor_circuit_svg(v_in, v_out, i_c_ma, i_b_ua, r_l, v_cc, v_th, state)
         render_svg(svg_code, height=410)
-
-    # Section: Real-time Characteristic Plots
-    st.markdown("---")
-    st.markdown("### 📈 Analytical Characteristics & Load Line Analysis")
-    
-    tab1, tab2 = st.tabs(["📊 Voltage Transfer Characteristic (VTC)", "📉 DC Load Line & Q-Point"])
-
-    with tab1:
-        # Plot VTC: V_out vs V_in
-        v_in_range = np.linspace(0.0, 6.0, 300)
-        v_out_curve = []
-        for v in v_in_range:
-            if v <= v_th:
-                v_out_curve.append(v_cc)
-            else:
-                ib_sim = (v - v_th) / r_b
-                ic_sim = min(beta * ib_sim, i_c_max_allowed)
-                v_out_curve.append(max(v_ce_sat, v_cc - ic_sim * r_l))
-
-        fig, ax = plt.subplots(figsize=(10, 3.8), facecolor="#090d16")
-        ax.set_facecolor("#0f172a")
-
-        # Color regions
-        ax.axvspan(0.0, v_th, alpha=0.15, color="#ef4444", label="Cutoff (OFF)")
-        # Find saturation boundary
-        v_sat_boundary = v_th + (i_c_max_allowed / beta) * r_b
-        if v_sat_boundary < 6.0:
-            ax.axvspan(v_th, v_sat_boundary, alpha=0.15, color="#f59e0b", label="Active (Linear)")
-            ax.axvspan(v_sat_boundary, 6.0, alpha=0.15, color="#22c55e", label="Saturation (ON)")
-        else:
-            ax.axvspan(v_th, 6.0, alpha=0.15, color="#f59e0b", label="Active (Linear)")
-
-        ax.plot(v_in_range, v_out_curve, color="#38bdf8", linewidth=2.8, label="V_out vs V_in (Inverting Transfer)")
-        # Current Operating Point
-        ax.scatter([v_in], [v_out], color="#00f0ff", s=130, zorder=5, edgecolor="#ffffff", linewidth=2, label="Current Q-Point")
-        ax.axvline(v_in, color="#00f0ff", linestyle=":", alpha=0.6)
-        ax.axhline(v_out, color="#00f0ff", linestyle=":", alpha=0.6)
-
-        ax.set_title("Transistor Inverter Voltage Transfer Characteristic (VTC)", color="#f8fafc", fontsize=12, fontweight="bold")
-        ax.set_xlabel("Input Base Voltage V_in (V)", color="#94a3b8", fontsize=11)
-        ax.set_ylabel("Output Collector Voltage V_out (V)", color="#94a3b8", fontsize=11)
-        ax.tick_params(colors="#cbd5e1")
-        ax.grid(True, linestyle="--", alpha=0.2, color="#ffffff")
-        ax.legend(facecolor="#1e293b", edgecolor="#475569", labelcolor="#f8fafc", loc="upper right")
-        ax.set_ylim(-0.2, v_cc + 0.8)
-        plt.tight_layout()
-        st.pyplot(fig)
-        plt.close(fig)
-
-    with tab2:
-        # Plot DC Load Line on IC vs VCE
-        v_ce_axis = np.linspace(0.0, v_cc, 100)
-        # Load line: I_C = (V_CC - V_CE) / R_L
-        ic_load_line = ((v_cc - v_ce_axis) / r_l) * 1000.0  # in mA
-
-        fig2, ax2 = plt.subplots(figsize=(10, 3.8), facecolor="#090d16")
-        ax2.set_facecolor("#0f172a")
-
-        # Family of transistor curves for different I_B
-        sample_ib = [0.0, 10.0, 25.0, 50.0, 80.0, 120.0]  # uA
-        for ib_val in sample_ib:
-            ic_active_val = min((beta * ib_val * 1e-6) * 1000.0, (v_cc / r_l) * 1000.0 * 1.2)
-            # simulate slight slope
-            v_sat_knee = 0.3
-            curve = [ic_active_val * (1 - np.exp(-v / v_sat_knee)) for v in v_ce_axis]
-            ax2.plot(v_ce_axis, curve, color="#475569", linestyle="--", alpha=0.5)
-
-        # Plot DC Load Line
-        ax2.plot(v_ce_axis, ic_load_line, color="#f59e0b", linewidth=2.8, label=f"DC Load Line (Slope = -1/{r_l:.0f}Ω)")
-        
-        # Plot Q-point
-        q_vce = v_out
-        q_ic_ma = i_c_ma
-        ax2.scatter([q_vce], [q_ic_ma], color="#22c55e", s=140, zorder=5, edgecolor="#ffffff", linewidth=2, label=f"Q-Point: ({q_vce:.2f}V, {q_ic_ma:.2f}mA)")
-        ax2.axvline(q_vce, color="#22c55e", linestyle=":", alpha=0.6)
-        ax2.axhline(q_ic_ma, color="#22c55e", linestyle=":", alpha=0.6)
-
-        # Cutoff and Saturation points labels
-        ax2.scatter([v_cc], [0], color="#ef4444", s=70, label=f"Cutoff Pt (V_CC={v_cc:.1f}V)")
-        ax2.scatter([0], [(v_cc / r_l) * 1000.0], color="#38bdf8", s=70, label=f"Max Saturation ({(v_cc/r_l)*1000.0:.1f}mA)")
-
-        ax2.set_title("DC Load Line & Operating Q-Point on Transistor Output Plane", color="#f8fafc", fontsize=12, fontweight="bold")
-        ax2.set_xlabel("Collector-Emitter Voltage V_CE (V)", color="#94a3b8", fontsize=11)
-        ax2.set_ylabel("Collector Current I_C (mA)", color="#94a3b8", fontsize=11)
-        ax2.tick_params(colors="#cbd5e1")
-        ax2.grid(True, linestyle="--", alpha=0.2, color="#ffffff")
-        ax2.legend(facecolor="#1e293b", edgecolor="#475569", labelcolor="#f8fafc", loc="upper right")
-        plt.tight_layout()
-        st.pyplot(fig2)
-        plt.close(fig2)
 
     # Educational Takeaway
     st.html("""

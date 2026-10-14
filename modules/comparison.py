@@ -264,6 +264,13 @@ def render_comparison_module():
 {lvl['quantum']}
                 </div>
                 """)
+            # Level 2 doc guideline: link to quantum equivalent of NOT gate
+            if lvl["id"] == 2:
+                if st.button("⚛️ Explore X Gate (Quantum NOT) in Module 3 →", key="btn_lvl2_to_x"):
+                    st.session_state["nav_module"] = "module3"
+                    st.session_state["quantum_mode"] = "🔬 Single-Qubit Gate Explorer (X, H, Z, M)"
+                    st.session_state["quantum_gate_choice"] = "X"
+                    st.rerun()
             st.markdown("")
 
     # ── Tab 3: Noise Comparison ───────────────────────────────────────

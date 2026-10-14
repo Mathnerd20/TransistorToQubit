@@ -270,6 +270,19 @@ def render_logic_gates_module():
         st.caption("Active input row highlighted in blue:")
         render_truth_table(selected_gate, in_a, in_b)
 
+        # NOT → X Gate navigation (doc guideline: introduce quantum equivalent)
+        if selected_gate == "NOT":
+            st.markdown("---")
+            st.html("""<div style="background:rgba(168,85,247,0.08); border:1px solid rgba(168,85,247,0.3); border-radius:10px; padding:12px 16px;">
+                <div style="color:#d4bfff; font-weight:600; margin-bottom:4px;">💡 Classical NOT ↔ Quantum Analogue</div>
+                <div style="color:#94a3b8; font-size:0.85rem;">X|0⟩ = |1⟩ &nbsp;·&nbsp; X|1⟩ = |0⟩</div>
+            </div>""")
+            if st.button("⚛️ Open X Gate in Module 3 →", use_container_width=True, key="btn_goto_x"):
+                st.session_state["nav_module"] = "module3"
+                st.session_state["quantum_mode"] = "🔬 Single-Qubit Gate Explorer (X, H, Z, M)"
+                st.session_state["quantum_gate_choice"] = "X"
+                st.rerun()
+
     with col_right:
         # Gate Description & Silicon Topology
         st.markdown(f"### 📐 {info['title']}")
@@ -295,21 +308,3 @@ def render_logic_gates_module():
             trans_svg = generate_transistor_logic_circuit_svg(selected_gate, in_a, in_b, out_val)
             render_svg(trans_svg, height=480)
 
-    # Multi-Gate Comparator Section
-    st.markdown("---")
-    st.markdown("### 🔍 All 6 Gates Side-by-Side Comparison")
-    st.caption(f"Current Input State: **A = {in_a}**, **B = {in_b}**")
-    
-    comp_cols = st.columns(6)
-    gates_list = ["NOT", "AND", "OR", "NAND", "NOR", "XOR"]
-    for i, g in enumerate(gates_list):
-        with comp_cols[i]:
-            val = compute_gate_output(g, in_a, in_b)
-            v_color = "#22c55e" if val else "#64748b"
-            st.html(f"""
-            <div class="glass-card" style="text-align:center; padding:14px 10px;">
-                <div style="font-size:0.8rem; color:#94a3b8; font-weight:600;">{g}</div>
-                <div style="font-size:2rem; font-weight:800; font-family:'JetBrains Mono', monospace; color:{v_color}; margin:4px 0;">{val}</div>
-                <div style="font-size:0.75rem; color:{'#4ade80' if val else '#94a3b8'};">{'HIGH' if val else 'LOW'}</div>
-            </div>
-            """)
