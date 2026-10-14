@@ -73,7 +73,7 @@
   #text(size: 9.2pt, fill: rgb("#1e293b"))[
     Students possessing foundational knowledge of semiconductor devices and classical digital circuits often experience a substantial conceptual gap when transitioning to quantum computing. Classical computing education grounds information in deterministic voltage rails ($0" V"$ vs $5" V"$), macroscopic transistor switches, and non-destructive measurement. Conversely, quantum mechanics introduces non-orthogonal vector superpositions, complex probability amplitudes, unitary transformations, irreversible projective collapse, and quantum entanglement.
 
-    This report presents the design, mathematical modeling, and evaluation of *TransistorToQubit* — an interactive software and pedagogical framework. The platform provides a direct, level-by-level bridge from bipolar junction transistor (NPN BJT) switching and canonical logic gates (NOT, AND, OR, NAND, NOR, XOR) to quantum states ($|0 angle$, $|1 angle$, $|+ angle$), quantum logic gates ($X$, $H$, $Z$, $"CNOT"$), 3D Bloch sphere geometry, and Aer measurement simulations. Furthermore, a deep comparative analysis of classical additive noise versus quantum decoherence and the 3-qubit bit-flip Quantum Error Correction (QEC) code is formulated and evaluated.
+    This report presents the design, mathematical modeling, and evaluation of *TransistorToQubit* — an interactive software and pedagogical framework. The platform provides a direct, level-by-level bridge from bipolar junction transistor (NPN BJT) switching and canonical logic gates (NOT, AND, OR, NAND, NOR, XOR) to quantum states ($|0⟩$, $|1⟩$, $|+⟩$), quantum logic gates ($X$, $H$, $Z$, $"CNOT"$), 3D Bloch sphere geometry, and Aer measurement simulations. Furthermore, a deep comparative analysis of classical additive noise versus quantum decoherence and the 3-qubit bit-flip Quantum Error Correction (QEC) code is formulated and evaluated.
   ]
 ]
 
@@ -87,17 +87,17 @@ $ "Semiconductor Materials" --> "BJT / MOSFET Switches" --> "Logic Gates" --> "D
 In this paradigm, information is represented as a macroscopic physical voltage $V(t)$. Measuring this voltage with a high-impedance oscilloscope probe does not perturb the circuit state. 
 
 When entering quantum computing, students encounter axioms that run directly counter to their electronic intuition:
-1. *Continuous State Space:* A classical bit is strictly $b in {0, 1}$. A qubit state $|psi angle = alpha |0 angle + beta |1 angle$ lives on the continuous surface of a complex unit sphere (the Bloch sphere), where $alpha, beta in CC$ and $|alpha|^2 + |beta|^2 = 1$.
+1. *Continuous State Space:* A classical bit is strictly $b in {0, 1}$. A qubit state $|psi⟩ = alpha |0⟩ + beta |1⟩$ lives on the continuous surface of a complex unit sphere (the Bloch sphere), where $alpha, beta in CC$ and $|alpha|^2 + |beta|^2 = 1$.
 2. *Linear Unitary Gates:* Quantum gates must be reversible and unitary ($U^dagger U = I$), contrasting with classical gates (e.g., AND, OR) that destroy information.
-3. *Observer Effect:* Measuring a qubit is not a benign voltage observation; it is a projective measurement that irrevocably collapses $|psi angle$ into a computational basis state according to the Born rule ($P(i) = |chevron.l i mid(|) psi chevron.r|^2$).
+3. *Observer Effect:* Measuring a qubit is not a benign voltage observation; it is a projective measurement that irrevocably collapses $|psi⟩$ into a computational basis state according to the Born rule ($P(i) = |⟨i|psi⟩|^2$).
 
 == 1.2 The Four-Level Progression Framework
 To eliminate this cognitive barrier, the framework organizes learning into four structured stages:
 
 - *Level 1 — Transistor Switch:* The student investigates how base current $I_B$ drives an NPN BJT between *Cutoff* ($V_(i n) <= V_(t h) ==> V_(o u t) approx 5" V"$, Logic 1) and *Saturation* ($V_(i n) > V_(t h) ==> V_(o u t) approx 0.2" V"$, Logic 0). This grounds binary logic in solid-state semiconductor physics.
-- *Level 2 — Logic Gate (NOT $arrow.l.r$ Pauli-X):* The classical BJT inverter circuit ($0 -> 1, 1 -> 0$) is linked to the Pauli-X gate ($X|0 angle = |1 angle$, $X|1 angle = |0 angle$). The platform provides an in-app navigation button taking the student directly from the classical NOT truth table to the quantum X gate in Module 3.
+- *Level 2 — Logic Gate (NOT $arrow.l.r$ Pauli-X):* The classical BJT inverter circuit ($0 -> 1, 1 -> 0$) is linked to the Pauli-X gate ($X|0⟩ = |1⟩$, $X|1⟩ = |0⟩$). The platform provides an in-app navigation button taking the student directly from the classical NOT truth table to the quantum X gate in Module 3.
 - *Level 3 — Bit to Qubit (Superposition):* The discrete scalar $b in {0, 1}$ transitions to probability amplitudes $alpha, beta$. The student experiments with the Hadamard gate:
-  $ H|0 angle = (|0 angle + |1 angle) / sqrt(2) ==> P(0) = 50%, quad P(1) = 50% $
+  $ H |0⟩ = 1 / sqrt(2) (|0⟩ + |1⟩) ==> P(0) = 50%, quad P(1) = 50% $
 - *Level 4 — Classical Circuit vs Quantum Circuit:* The student contrasts deterministic classical gate pipelines against quantum circuits that manipulate interference and entanglement prior to irreversible projective readout.
 
 #v(8pt)
@@ -118,11 +118,11 @@ The platform implements the following comprehensive 10-point concept dictionary:
   
   [Transistor], [Electronic switching device], [Qubit (2-level quantum system)], [Switch is macroscopic; qubit is a 2-dimensional complex vector space.],
   [ON / OFF], [Binary rails ($0" V"$ / $5" V"$)], [Measurement collapse ($0$ or $1$)], [Classical state is always definite; qubit is continuous until measured.],
-  [Voltage/Current], [Physical observable signal], [Quantum statevector $|psi angle$ / amplitudes], [Amplitudes $alpha, beta in CC$ possess phase; voltage is purely real scalar.],
+  [Voltage/Current], [Physical observable signal], [Quantum statevector $|psi⟩$ / amplitudes], [Amplitudes $alpha, beta in CC$ possess phase; voltage is purely real scalar.],
   [Logic Gate], [Deterministic Boolean gate], [Unitary gate ($X, H, Z, "CNOT"$)], [Quantum gates must be reversible unitary matrices ($U^dagger U = I$).],
-  [NOT Gate], [Inverts signal ($0 <-> 1$)], [Pauli-X gate (Quantum NOT)], [$X|0 angle = |1 angle$, $X|1 angle = |0 angle$, but acts linearly on superpositions.],
+  [NOT Gate], [Inverts signal ($0 <-> 1$)], [Pauli-X gate (Quantum NOT)], [$X|0⟩ = |1⟩$, $X|1⟩ = |0⟩$, but acts linearly on superpositions.],
   [Digital Circuit], [Interconnected Boolean gates], [Quantum Circuit], [Exploits superposition and interference across Hilbert space.],
-  [Classical Bit], [Scalar $b in {0, 1}$], [Qubit $|psi angle = alpha |0 angle + beta |1 angle$], [Continuous continuum of states on the Bloch sphere surface.],
+  [Classical Bit], [Scalar $b in {0, 1}$], [Qubit $|psi⟩ = alpha |0⟩ + beta |1⟩$], [Continuous continuum of states on the Bloch sphere surface.],
   [Measurement], [Non-destructive voltmeter probe], [Projective measurement collapse], [Irreversible wave-function collapse governed by Born rule ($P = |alpha|^2$).],
   [Noise], [Additive voltage $V + n(t)$], [Decoherence / Quantum noise], [Quantum noise rotates state vectors and destroys phase coherence.],
   [Determinism], [Same input yields same output], [Probabilistic measurement], [Unitary evolution is deterministic; measurement sampling is stochastic.],
@@ -162,18 +162,18 @@ Module 2 provides interactive exploration of the six canonical gates required by
 - *Dual Visualizations:* Students toggle between standard IEEE 91-1984 logic symbols and Resistor-Transistor Logic (RTL) transistor-level circuit schematics.
 - *Dynamic Truth Tables:* Rendered inside an isolated HTML frame with real-time row highlighting based on user switch inputs ($A, B in {0, 1}$).
 - *NOT $arrow.r$ X Navigation:* Selecting the NOT gate exposes an interactive card and one-click button:
-  $ "NOT "(0) = 1 <==> X|0 angle = |1 angle $
+  $ "NOT "(0) = 1 <==> X|0⟩ = |1⟩ $
   Clicking the button seamlessly routes the session to the Pauli-X gate in Module 3.
 
 == 3.3 Module 3: Quantum Gates & Circuits (Qiskit Engine)
 Module 3 is built upon Qiskit 1.x and Qiskit Aer:
-- *Initial Computational States:* Selectable ground state $|0 angle = mat(1; 0)$ and excited state $|1 angle = mat(0; 1)$.
+- *Initial Computational States:* Selectable ground state $|0⟩ = mat(1; 0)$ and excited state $|1⟩ = mat(0; 1)$.
 - *Quantum Operators:*
   $ X = mat(0, 1; 1, 0), quad H = 1/sqrt(2) mat(1, 1; 1, -1), quad Z = mat(1, 0; 0, -1) $
 - *Two-Qubit Entanglement (CNOT):* Applies Controlled-NOT:
-  $ "CNOT" (H|0 angle ⊗ |0 angle) = (|00 angle + |11 angle) / sqrt(2) = |Phi^+ angle $
-- *Annotated 3D Bloch Sphere:* Features cardinal coordinate axes and labeled Dirac points ($|0 angle$ North Pole, $|1 angle$ South Pole, $|+ angle, |- angle, |i angle$ along the equatorial plane).
-- *Measurement Collapse Simulation:* Executes projective measurements on `AerSimulator` across $128$ to $4096$ shots, producing empirical probability histograms matching theoretical Born rule calculations ($P(m) = |chevron.l m mid(|) psi chevron.r|^2$).
+  $ "CNOT" (H |0⟩ ⊗ |0⟩) = 1 / sqrt(2) (|00⟩ + |11⟩) = |Phi^+⟩ $
+- *Annotated 3D Bloch Sphere:* Features cardinal coordinate axes and labeled Dirac points ($|0⟩$ North Pole, $|1⟩$ South Pole, $|+⟩, |-⟩, |i⟩$ along the equatorial plane).
+- *Measurement Collapse Simulation:* Executes projective measurements on `AerSimulator` across $128$ to $4096$ shots, producing empirical probability histograms matching theoretical Born rule calculations ($P(m) = |⟨m|psi⟩|^2$).
 
 == 3.4 Module D: Comparison & Noise Framework
 Module D unifies the learning experience by providing:
@@ -194,23 +194,23 @@ Because the BJT inverter has a steep, non-linear voltage transfer characteristic
 
 == 4.2 Quantum Decoherence & Error Channels
 In quantum systems, noise is non-additive and phase-sensitive:
-1. *Bit-Flip Error Channel ($X$):* $|psi angle arrow.r.long^(p) X|psi angle$, randomly flipping $|0 angle <-> |1 angle$.
-2. *Phase-Flip Error Channel ($Z$):* $|psi angle arrow.r.long^(p) Z|psi angle$, altering phase without affecting populations ($|+ angle <-> |- angle$).
+1. *Bit-Flip Error Channel ($X$):* $|psi⟩ arrow.r.long^(p) X|psi⟩$, randomly flipping $|0⟩ <-> |1⟩$.
+2. *Phase-Flip Error Channel ($Z$):* $|psi⟩ arrow.r.long^(p) Z|psi⟩$, altering phase without affecting populations ($|+⟩ <-> |-⟩$).
 3. *Depolarizing Noise Channel ($cal(E)$):* Replaces the density matrix with the maximally mixed state with probability $p$:
    $ cal(E)(rho) = (1 - p) rho + p/3 (X rho X + Y rho Y + Z rho Z) $
 
 == 4.3 Quantum Error Correction (3-Qubit Bit-Flip Code)
-Classical error correction uses simple duplication ($0 -> 000, 1 -> 111$). In quantum computing, the *No-Cloning Theorem* ($U|psi angle |0 angle eq.not |psi angle |psi angle$) forbids copying an unknown state. Furthermore, directly measuring qubits to detect errors collapses their superposition.
+Classical error correction uses simple duplication ($0 -> 000, 1 -> 111$). In quantum computing, the *No-Cloning Theorem* ($U|psi⟩ |0⟩ eq.not |psi⟩ |psi⟩$) forbids copying an unknown state. Furthermore, directly measuring qubits to detect errors collapses their superposition.
 
 The 3-qubit bit-flip code resolves this via entanglement:
 1. *Encoding:* Using two CNOT gates, the logical qubit is encoded into an entangled 3-qubit state:
-   $ |psi angle = alpha |0 angle + beta |1 angle ==> |psi_("enc") angle = alpha |000 angle + beta |111 angle $
+   $ |psi⟩ = alpha |0⟩ + beta |1⟩ ==> |psi_("enc")⟩ = alpha |000⟩ + beta |111⟩ $
 2. *Syndrome Measurement:* Parity operators $Z_0 Z_1$ and $Z_1 Z_2$ are measured using ancilla qubits, yielding syndrome bits $s_1 s_2 in {00, 10, 11, 01}$ without revealing $alpha$ or $beta$:
    - $s_1 s_2 = 00 ==> "No error"$
    - $s_1 s_2 = 10 ==> "Bit-flip on " q_0 quad (arrow.r "apply " X_0)$
    - $s_1 s_2 = 11 ==> "Bit-flip on " q_1 quad (arrow.r "apply " X_1)$
    - $s_1 s_2 = 01 ==> "Bit-flip on " q_2 quad (arrow.r "apply " X_2)$
-3. *Recovery:* Applying the diagnosed Pauli-X operator restores the original state $|psi angle$ with $100%$ theoretical fidelity.
+3. *Recovery:* Applying the diagnosed Pauli-X operator restores the original state $|psi⟩$ with $100%$ theoretical fidelity.
 
 #v(8pt)
 
@@ -232,9 +232,9 @@ The 3-qubit bit-flip code resolves this via entanglement:
   [Observe Transistor Switching], [Dynamic SVG schematic showing Cutoff vs Saturation paths], [Passed],
   [Canonical Logic Gates], [NOT, AND, OR, NAND, NOR, XOR with IEEE symbols & RTL circuits], [Passed],
   [Live Truth Tables], [HTML frame with active-row blue highlight for current inputs], [Passed],
-  [Quantum Basis States], [$|0 angle$, $|1 angle$ selectable in Module 3], [Passed],
+  [Quantum Basis States], [$|0⟩$, $|1⟩$ selectable in Module 3], [Passed],
   [Quantum Gates & Circuits], [$X, H, Z, "CNOT"$, and Measurement with Qiskit 1.x & Aer], [Passed],
-  [Bloch Sphere Representation], [3D Bloch sphere with labeled poles ($|0 angle, |1 angle, |+ angle, |- angle, |i angle$)], [Passed],
+  [Bloch Sphere Representation], [3D Bloch sphere with labeled poles ($|0⟩, |1⟩, |+⟩, |-⟩, |i⟩$)], [Passed],
   [Classical $arrow.l.r$ Quantum Comparison], [Dedicated Module D with 10-row mapping table], [Passed],
   [4-Level Progression], [Explicit 4-level sequence with NOT $arrow.r$ X navigation bridge], [Passed],
   [Noise Modeling & QEC], [Classical $n(t)$ sim, bit/phase-flip channels, 3-qubit QEC pipeline], [Passed],
