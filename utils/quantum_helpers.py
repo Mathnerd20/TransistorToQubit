@@ -157,13 +157,16 @@ def build_two_qubit_cnot_circuit(ctrl_state="|0⟩", tgt_state="|0⟩", superpos
     return qc_state, qc_meas
 
 
-def format_statevector_latex(sv: Statevector, num_qubits=1):
+def format_statevector_latex(sv: Statevector, num_qubits=1, as_latex=False):
     """
     Converts a statevector into a formatted Dirac bra-ket string.
+    By default returns clean unicode Dirac notation (e.g. |0⟩, |1⟩)
+    suitable for direct HTML and markdown rendering.
     """
     terms = []
     data = sv.data
     dim = len(data)
+    ket_close = r"\rangle" if as_latex else "⟩"
     
     for idx in range(dim):
         amp = data[idx]
@@ -184,14 +187,14 @@ def format_statevector_latex(sv: Statevector, num_qubits=1):
                 coeff = f"({real_part:.3f} {sign} {abs(imag_part):.3f}i)"
                 
             if coeff == "1.000":
-                terms.append(f"|{bin_str}\\rangle")
+                terms.append(f"|{bin_str}{ket_close}")
             elif coeff == "-1.000":
-                terms.append(f"-|{bin_str}\\rangle")
+                terms.append(f"-|{bin_str}{ket_close}")
             else:
-                terms.append(f"{coeff}|{bin_str}\\rangle")
+                terms.append(f"{coeff}|{bin_str}{ket_close}")
                 
     if not terms:
-        return "|0\\rangle"
+        return f"|0{ket_close}"
     return " + ".join(terms).replace("+ -", "- ")
 
 
