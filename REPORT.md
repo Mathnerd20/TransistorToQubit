@@ -4,7 +4,7 @@
 **Live Deployed Application:** [https://transistortoqubit.streamlit.app](https://transistortoqubit.streamlit.app)  
 **GitHub Repository:** [https://github.com/Mathnerd20/TransistorToQubit](https://github.com/Mathnerd20/TransistorToQubit)  
 **Deployment Platform:** Streamlit Community Cloud & Qiskit Aer Engine  
-**Author:** Student Solution & Implementation Report  
+**Author:** Akshay Galipalli | **Roll No:** 25MCCE28  
 **Date:** October 2026  
 
 ---

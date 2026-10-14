@@ -1,3 +1,8 @@
+#set document(
+  title: "From Transistors to Qubits: A Hybrid Learning Framework for Understanding Quantum Computing through Semiconductor Concepts",
+  author: "Akshay Galipalli (25MCCE28)",
+)
+
 #set page(
   paper: "a4",
   margin: (top: 2.2cm, bottom: 2.2cm, left: 2.2cm, right: 2.2cm),
@@ -54,7 +59,11 @@
     #text(size: 13pt, weight: "medium", fill: rgb("#0284c7"))[
       A Hybrid Learning Framework for Understanding Quantum Computing through Semiconductor Concepts
     ] \
-    #v(8pt)
+    #v(7pt)
+    #text(size: 10.5pt, weight: "bold", fill: rgb("#0f172a"))[
+      Akshay Galipalli #h(8pt) | #h(8pt) Roll No: 25MCCE28
+    ] \
+    #v(4pt)
     #text(size: 9.5pt, fill: rgb("#475569"))[
       *Course Context:* EDC Assignment #2 | *Date:* October 2026 \
       *Live Deployed Web App:* #link("https://transistortoqubit.streamlit.app")[https://transistortoqubit.streamlit.app] \
