@@ -40,4 +40,9 @@ MODULES = {
         "icon": "⚛️",
         "description": "Quantum Layer: Qubits |0⟩, |1⟩, Pauli-X, Hadamard, Pauli-Z, CNOT, and Measurement using Qiskit.",
     },
+    "module4": {
+        "title": "Module D: Classical ↔ Quantum Comparison",
+        "icon": "🗺️",
+        "description": "Comparison Framework: Concept mapping table, 4-level learning progression, and classical vs quantum noise analysis.",
+    },
 }

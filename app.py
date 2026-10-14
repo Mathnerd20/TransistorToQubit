@@ -12,6 +12,7 @@ from config import APP_TITLE, APP_ICON, APP_SUBTITLE, MODULES
 from modules.transistor import render_transistor_module
 from modules.logic_gates import render_logic_gates_module
 from modules.quantum import render_quantum_module
+from modules.comparison import render_comparison_module
 
 
 def load_custom_css():
@@ -49,7 +50,7 @@ def main():
         st.markdown("### 🧭 Navigation")
         selected_module_key = st.radio(
             "Select Module:",
-            options=["module1", "module2", "module3"],
+            options=["module1", "module2", "module3", "module4"],
             format_func=lambda k: MODULES[k]["title"],
             index=0,
             label_visibility="collapsed",
@@ -67,6 +68,9 @@ def main():
         3. **Quantum Layer**  
            _Qubits & Superposition_  
            |0⟩, |1⟩, X, H, Z, CNOT, M
+        4. **Comparison**  
+           _Classical ↔ Quantum_  
+           Concept map, levels & noise
         """)
 
         st.markdown("---")
@@ -85,6 +89,8 @@ def main():
         render_logic_gates_module()
     elif selected_module_key == "module3":
         render_quantum_module()
+    elif selected_module_key == "module4":
+        render_comparison_module()
 
 
 if __name__ == "__main__":
