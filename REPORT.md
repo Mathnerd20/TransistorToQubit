@@ -1,8 +1,9 @@
 # From Transistors to Qubits: A Hybrid Learning Framework for Understanding Quantum Computing through Semiconductor Concepts
 
 **Course / Context:** EDC Assignment #2: Research Problem & Practical Implementation  
-**Project Repository:** `TransistorToQubit`  
-**Deployment Platform:** Streamlit Cloud & Qiskit Aer Engine  
+**Live Deployed Application:** [https://transistortoqubit.streamlit.app](https://transistortoqubit.streamlit.app)  
+**GitHub Repository:** [https://github.com/Mathnerd20/TransistorToQubit](https://github.com/Mathnerd20/TransistorToQubit)  
+**Deployment Platform:** Streamlit Community Cloud & Qiskit Aer Engine  
 **Author:** Student Solution & Implementation Report  
 **Date:** October 2026  
 

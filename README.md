@@ -1,5 +1,8 @@
 # ⚡ TransistorToQubit: The Evolution of Computing
 
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://transistortoqubit.streamlit.app)
+**Live Web Application:** [https://transistortoqubit.streamlit.app](https://transistortoqubit.streamlit.app)
+
 An interactive web application built with **Streamlit**, **Qiskit**, **NumPy**, and **Matplotlib** that visualizes the progression of computation from solid-state semiconductors to classical digital logic and quantum superposition.
 
 ---

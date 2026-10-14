@@ -53,6 +53,8 @@
     #v(8pt)
     #text(size: 9.5pt, fill: rgb("#475569"))[
       *Course Context:* EDC Assignment #2 | *Date:* October 2026 \
+      *Live Deployed Web App:* #link("https://transistortoqubit.streamlit.app")[https://transistortoqubit.streamlit.app] \
+      *GitHub Repository:* #link("https://github.com/Mathnerd20/TransistorToQubit")[https://github.com/Mathnerd20/TransistorToQubit] \
       *Tech Stack:* Python 3, Streamlit, Qiskit 1.x, Qiskit Aer, NumPy, Matplotlib, SVG
     ]
   ]
