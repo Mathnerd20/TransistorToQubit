@@ -220,11 +220,27 @@ def draw_circuit_mpl(qc: QuantumCircuit):
 def draw_bloch_sphere(sv: Statevector):
     """
     Renders Bloch sphere multivector for the given Statevector.
+    Adds Dirac-notation labels at poles (|0⟩, |1⟩) and equatorial points (|+⟩, |−⟩, |i⟩).
     """
     fig = plot_bloch_multivector(sv)
     fig.patch.set_facecolor("#090d16")
     for ax in fig.axes:
         ax.set_facecolor("#090d16")
+        # Annotate poles and equator on every 3-D Bloch axis
+        if hasattr(ax, "get_zlim"):
+            try:
+                ax.text(0, 0, 1.38, "|0⟩", color="#73d0ff",
+                        fontsize=10, fontweight="bold", ha="center", va="center", zorder=10)
+                ax.text(0, 0, -1.48, "|1⟩", color="#d4bfff",
+                        fontsize=10, fontweight="bold", ha="center", va="center", zorder=10)
+                ax.text(1.52, 0, 0.06, "|+⟩", color="#bae67e",
+                        fontsize=8, fontweight="bold", ha="center", va="center", zorder=10)
+                ax.text(-1.52, 0, 0.06, "|−⟩", color="#ffcc66",
+                        fontsize=8, fontweight="bold", ha="center", va="center", zorder=10)
+                ax.text(0, 1.52, 0.06, "|i⟩", color="#f28779",
+                        fontsize=8, ha="center", va="center", zorder=10)
+            except Exception:
+                pass
     return fig
 
 

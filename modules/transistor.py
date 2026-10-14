@@ -1,10 +1,10 @@
 """
 Module 1: Transistor Switching Simulation.
-Provides interactive exploration of transistor switching dynamics with:
+Provides interactive exploration of NPN BJT transistor switching dynamics with:
 - Synchronized sliders and manual numeric inputs
 - Dynamic circuit schematics (SVG)
 - Physics engine (Cutoff, Active, Saturation)
-- Voltage Transfer Characteristic (VTC) curve and DC Load Line plots
+- Real-time voltage, current, and binary logic level readouts
 """
 
 import streamlit as st
@@ -51,7 +51,7 @@ def render_transistor_module():
     <div class="hero-banner">
         <div class="hero-title">Module 1: Transistor as an Electronic Switch</div>
         <div class="hero-subtitle">
-            Observe how a semiconductor device transitions between <b>Cutoff (Open Switch / Logic 1)</b> 
+            Observe how an NPN BJT transistor transitions between <b>Cutoff (Open Switch / Logic 1)</b> 
             and <b>Saturation (Closed Switch / Logic 0)</b>. Adjust parameters using the synchronized sliders and manual input fields.
         </div>
     </div>
@@ -80,7 +80,7 @@ def render_transistor_module():
         st.caption("Adjust sliders or type precise values into text boxes:")
 
         # 1. Base Voltage (V_in)
-        st.markdown("**1. Base / Gate Input Voltage ($V_{in}$)**")
+        st.markdown("**1. Base Input Voltage ($V_{in}$)**")
         c1, c2 = st.columns([2, 1])
         with c1:
             st.slider(
@@ -108,7 +108,7 @@ def render_transistor_module():
             )
 
         # 2. Switching Threshold (V_th)
-        st.markdown("**2. Switching Threshold ($V_{th}$ / $V_{BE(on)}$)**")
+        st.markdown("**2. Switching Threshold Voltage ($V_{th}$ / $V_{BE(on)}$)**")
         c1, c2 = st.columns([2, 1])
         with c1:
             st.slider(
@@ -136,7 +136,7 @@ def render_transistor_module():
             )
 
         # 3. Load Resistance (R_L)
-        st.markdown("**3. Collector/Drain Load Resistance ($R_L$)**")
+        st.markdown("**3. Collector Load Resistance ($R_L$)**")
         c1, c2 = st.columns([2, 1])
         with c1:
             st.slider(
@@ -163,8 +163,8 @@ def render_transistor_module():
                 args=("r_l", "num"),
             )
 
-        # 4. Collector/Drain Current Limit (I_C max / rating)
-        st.markdown("**4. Max Collector/Drain Current Limit ($I_{C,max}$ in mA)**")
+        # 4. Collector Current Limit (I_C max / rating)
+        st.markdown("**4. Max Collector Current Limit ($I_{C,max}$ in mA)**")
         c1, c2 = st.columns([2, 1])
         with c1:
             st.slider(
