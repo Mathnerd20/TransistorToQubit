@@ -51,33 +51,34 @@ def render_svg(svg_str: str, height: int = 480):
     }}
     .zoom-toolbar {{
       position: absolute;
-      top: 10px;
-      right: 12px;
+      top: 8px;
+      right: 10px;
       z-index: 30;
       display: flex;
       align-items: center;
-      gap: 3px;
-      background: rgba(15, 23, 42, 0.9);
+      gap: 4px;
+      background: rgba(15, 23, 42, 0.92);
       backdrop-filter: blur(8px);
       border: 1px solid rgba(56, 189, 248, 0.4);
       border-radius: 20px;
-      padding: 3px 6px;
+      padding: 4px 8px;
       box-shadow: 0 4px 14px rgba(0, 0, 0, 0.6);
     }}
     .zoom-btn {{
       background: transparent;
       border: none;
       color: #94a3b8;
-      width: 24px;
-      height: 24px;
+      width: 32px;
+      height: 32px;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      font-size: 14px;
+      font-size: 16px;
       font-weight: bold;
       transition: all 0.15s ease;
+      touch-action: manipulation;
     }}
     .zoom-btn:hover {{
       background: rgba(56, 189, 248, 0.25);
@@ -89,10 +90,10 @@ def render_svg(svg_str: str, height: int = 480):
     }}
     .zoom-val {{
       color: #38bdf8;
-      font-size: 11px;
+      font-size: 12px;
       font-weight: 700;
       font-family: monospace;
-      min-width: 38px;
+      min-width: 42px;
       text-align: center;
       padding: 0 2px;
     }}
@@ -105,6 +106,7 @@ def render_svg(svg_str: str, height: int = 480):
       display: flex;
       align-items: center;
       justify-content: center;
+      touch-action: none;
     }}
     .viewport.grabbing {{
       cursor: grabbing;
@@ -157,7 +159,7 @@ def render_svg(svg_str: str, height: int = 480):
       </div>
     </div>
     
-    <div class="hint-bar">🔍 Scroll to zoom · Drag to pan · Double-click to reset</div>
+    <div class="hint-bar">🔍 Scroll/pinch to zoom · Drag to pan · Double-tap to reset</div>
   </div>
 
   <script>
@@ -168,6 +170,8 @@ def render_svg(svg_str: str, height: int = 480):
       let isPanning = false;
       let startX = 0;
       let startY = 0;
+      let initialPinchDist = null;
+      let lastTapTime = 0;
 
       const wrapper = document.getElementById('svgWrapper');
       const viewport = document.getElementById('viewport');
@@ -201,12 +205,14 @@ def render_svg(svg_str: str, height: int = 480):
         applyTransform();
       }}
 
+      // Mouse wheel zoom
       viewport.addEventListener('wheel', function(e) {{
         e.preventDefault();
         const factor = e.deltaY < 0 ? 1.15 : 0.87;
         zoom(factor, e.clientX, e.clientY);
       }}, {{ passive: false }});
 
+      // Mouse drag pan
       viewport.addEventListener('mousedown', function(e) {{
         if (e.button !== 0) return;
         isPanning = true;
@@ -231,6 +237,58 @@ def render_svg(svg_str: str, height: int = 480):
 
       viewport.addEventListener('dblclick', function() {{
         reset();
+      }});
+
+      // Touch events for Mobile & Tablets
+      viewport.addEventListener('touchstart', function(e) {{
+        if (e.touches.length === 1) {{
+          isPanning = true;
+          startX = e.touches[0].clientX - panX;
+          startY = e.touches[0].clientY - panY;
+          viewport.classList.add('grabbing');
+        }} else if (e.touches.length === 2) {{
+          isPanning = false;
+          const t1 = e.touches[0];
+          const t2 = e.touches[1];
+          initialPinchDist = Math.hypot(t2.clientX - t1.clientX, t2.clientY - t1.clientY);
+        }}
+      }}, {{ passive: false }});
+
+      window.addEventListener('touchmove', function(e) {{
+        if (e.touches.length === 1 && isPanning) {{
+          e.preventDefault();
+          panX = e.touches[0].clientX - startX;
+          panY = e.touches[0].clientY - startY;
+          applyTransform();
+        }} else if (e.touches.length === 2 && initialPinchDist) {{
+          e.preventDefault();
+          const t1 = e.touches[0];
+          const t2 = e.touches[1];
+          const dist = Math.hypot(t2.clientX - t1.clientX, t2.clientY - t1.clientY);
+          if (dist > 10) {{
+            const factor = dist / initialPinchDist;
+            const midX = (t1.clientX + t2.clientX) / 2;
+            const midY = (t1.clientY + t2.clientY) / 2;
+            zoom(factor, midX, midY);
+            initialPinchDist = dist;
+          }}
+        }}
+      }}, {{ passive: false }});
+
+      window.addEventListener('touchend', function(e) {{
+        if (e.touches.length < 2) {{
+          initialPinchDist = null;
+        }}
+        if (e.touches.length === 0) {{
+          isPanning = false;
+          viewport.classList.remove('grabbing');
+
+          const now = Date.now();
+          if (now - lastTapTime < 300) {{
+            reset();
+          }}
+          lastTapTime = now;
+        }}
       }});
 
       document.getElementById('btnZoomIn').addEventListener('click', function(e) {{

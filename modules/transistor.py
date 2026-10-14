@@ -252,35 +252,26 @@ def render_transistor_module():
         </div>
         """)
 
-        m1, m2, m3, m4 = st.columns(4)
-        with m1:
-            st.html(f"""
+        st.html(f"""
+        <div class="metrics-grid">
             <div class="metric-pill">
                 <div class="label">V_in (Base)</div>
                 <div class="value">{v_in:.2f} V</div>
             </div>
-            """)
-        with m2:
-            st.html(f"""
             <div class="metric-pill">
                 <div class="label">V_out (Collector)</div>
                 <div class="value" style="color:{'#22c55e' if v_out > 2.5 else '#f43f5e'}">{v_out:.2f} V</div>
             </div>
-            """)
-        with m3:
-            st.html(f"""
             <div class="metric-pill">
                 <div class="label">I_C (Collector)</div>
                 <div class="value">{i_c_ma:.2f} mA</div>
             </div>
-            """)
-        with m4:
-            st.html(f"""
             <div class="metric-pill">
                 <div class="label">Digital Logic</div>
                 <div class="value">{logic_level}</div>
             </div>
-            """)
+        </div>
+        """)
 
         # SVG Schematic
         st.markdown("#### ⚡ Dynamic Circuit Schematic")

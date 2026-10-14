@@ -152,8 +152,7 @@ def render_comparison_module():
 
         # Header row
         st.html("""
-        <div style="display:grid; grid-template-columns:1fr 1.2fr 1fr; gap:8px; margin-bottom:6px; padding:10px 14px;
-                    background:rgba(30,41,59,0.95); border-radius:10px; border:1px solid rgba(148,163,184,0.3);">
+        <div class="concept-map-header">
             <div style="color:#38bdf8; font-weight:700; font-size:0.9rem;">⚡ Classical Concept</div>
             <div style="color:#94a3b8; font-weight:700; font-size:0.9rem; text-align:center;">🎓 What You Already Know</div>
             <div style="color:#a855f7; font-weight:700; font-size:0.9rem; text-align:right;">⚛️ Quantum Counterpart</div>
@@ -163,23 +162,17 @@ def render_comparison_module():
         for i, row in enumerate(CONCEPT_MAP):
             bg = "rgba(15,23,42,0.6)" if i % 2 == 0 else "rgba(22,33,53,0.6)"
             st.html(f"""
-            <div style="display:grid; grid-template-columns:1fr 1.2fr 1fr; gap:8px; margin-bottom:4px;
-                        padding:12px 14px; background:{bg}; border-radius:8px;
-                        border:1px solid rgba(148,163,184,0.1); align-items:center;">
-                <div>
+            <div class="concept-map-row" style="background:{bg};">
+                <div class="concept-col-classical">
                     <span style="font-size:1.1rem;">{row['classical_icon']}</span>
-                    <span style="color:#38bdf8; font-weight:600; font-size:0.95rem; margin-left:6px;">
-                        {row['classical_concept']}
-                    </span>
+                    <span style="margin-left:6px;">{row['classical_concept']}</span>
                 </div>
-                <div style="color:#cbd5e1; font-size:0.85rem; text-align:center; font-style:italic;">
+                <div class="concept-col-bridge">
                     {row['student_knows']}
                 </div>
-                <div style="text-align:right;">
+                <div class="concept-col-quantum">
                     <span style="font-size:1.1rem;">{row['quantum_icon']}</span>
-                    <span style="color:#a855f7; font-weight:600; font-size:0.95rem; margin-left:6px;">
-                        {row['quantum_counterpart']}
-                    </span>
+                    <span style="margin-left:6px;">{row['quantum_counterpart']}</span>
                 </div>
             </div>
             """)
@@ -247,9 +240,8 @@ def render_comparison_module():
                 """)
             with col_arrow:
                 st.html(f"""
-                <div style="display:flex; flex-direction:column; align-items:center; justify-content:center;
-                            height:100%; padding:8px; text-align:center;">
-                    <div style="font-size:1.8rem; color:{lvl['color']};">→</div>
+                <div class="level-arrow-box">
+                    <div class="level-arrow-symbol" style="color:{lvl['color']};">→</div>
                     <div style="color:#94a3b8; font-size:0.75rem; margin-top:4px; font-style:italic;">
                         {lvl['transition']}
                     </div>
@@ -675,7 +667,7 @@ def _render_noise_tab():
         <div class="glass-card" style="padding:18px 22px;">
             <div style="font-size:0.85rem; color:#94a3b8; text-transform:uppercase; margin-bottom:12px;">Step-by-Step Quantum Error Correction Pipeline</div>
             
-            <div style="display:flex; flex-direction:column; gap:12px; font-family:'JetBrains Mono', monospace;">
+            <div style="display:flex; flex-direction:column; gap:12px; font-family:'JetBrains Mono', monospace; word-break:break-word;">
                 <div style="background:rgba(30,41,59,0.7); padding:10px 14px; border-radius:8px; border-left:3px solid #38bdf8;">
                     <span style="color:#94a3b8; font-size:0.8rem;">1. ENCODING (CNOT gates):</span><br/>
                     <b style="color:#38bdf8; font-size:1.1rem;">|ψ_encoded⟩ = {encoded_str}</b>

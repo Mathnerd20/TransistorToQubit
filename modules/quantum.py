@@ -113,10 +113,10 @@ def render_single_qubit_explorer():
         st.html(f"""
         <div class="glass-card" style="padding:16px 20px;">
             <div style="font-size:0.85rem; color:#94a3b8; text-transform:uppercase; margin-bottom:6px;">Dirac Bra-Ket State |ψ⟩</div>
-            <div style="font-size:1.6rem; color:#d8b4fe; font-family:'JetBrains Mono', monospace; font-weight:700;">
+            <div style="font-size:clamp(1.1rem, 4vw, 1.6rem); color:#d8b4fe; font-family:'JetBrains Mono', monospace; font-weight:700; word-break:break-word;">
                 |ψ⟩ = {dirac_expr}
             </div>
-            <div style="display:flex; gap:24px; margin-top:12px; font-family:'JetBrains Mono', monospace;">
+            <div style="display:flex; flex-wrap:wrap; gap:16px; margin-top:12px; font-family:'JetBrains Mono', monospace;">
                 <div><span style="color:#94a3b8;">P(|0⟩):</span> <b style="color:#38bdf8;">{prob_0 * 100:.1f}%</b></div>
                 <div><span style="color:#94a3b8;">P(|1⟩):</span> <b style="color:#a855f7;">{prob_1 * 100:.1f}%</b></div>
             </div>
@@ -186,10 +186,10 @@ def render_cnot_explorer():
         st.html(f"""
         <div class="glass-card" style="padding:16px 20px;">
             <div style="font-size:0.85rem; color:#94a3b8; text-transform:uppercase; margin-bottom:6px;">2-Qubit State |ψ⟩</div>
-            <div style="font-size:1.6rem; color:#d8b4fe; font-family:'JetBrains Mono', monospace; font-weight:700;">
+            <div style="font-size:clamp(1.1rem, 4vw, 1.6rem); color:#d8b4fe; font-family:'JetBrains Mono', monospace; font-weight:700; word-break:break-word;">
                 |ψ⟩ = {dirac_expr}
             </div>
-            <div style="margin-top:10px; font-size:0.9rem; color:#cbd5e1;">{bell_note}</div>
+            <div style="margin-top:10px; font-size:0.9rem; color:#cbd5e1; line-height:1.4;">{bell_note}</div>
         </div>
         """)
 

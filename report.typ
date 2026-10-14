@@ -54,7 +54,6 @@
     #text(size: 9.5pt, fill: rgb("#475569"))[
       *Course Context:* EDC Assignment #2 | *Date:* October 2026 \
       *Live Deployed Web App:* #link("https://transistortoqubit.streamlit.app")[https://transistortoqubit.streamlit.app] \
-      *GitHub Repository:* #link("https://github.com/Mathnerd20/TransistorToQubit")[https://github.com/Mathnerd20/TransistorToQubit] \
       *Tech Stack:* Python 3, Streamlit, Qiskit 1.x, Qiskit Aer, NumPy, Matplotlib, SVG
     ]
   ]
@@ -86,7 +85,7 @@
 == 1.1 The Classical-to-Quantum Learning Chasm
 Engineering curricula traditionally educate students in a bottom-up physical hierarchy:
 $ "Semiconductor Materials" --> "BJT / MOSFET Switches" --> "Logic Gates" --> "Digital Systems" $
-In this paradigm, information is represented as a macroscopic physical voltage $V(t)$. Measuring this voltage with a high-impedance oscilloscope probe does not perturb the circuit state. 
+In this paradigm, information is represented as a macroscopic physical voltage $V(t)$. Measuring this voltage with a high-impedance oscilloscope probe does not perturb the circuit state.
 
 When entering quantum computing, students encounter axioms that run directly counter to their electronic intuition:
 1. *Continuous State Space:* A classical bit is strictly $b in {0, 1}$. A qubit state $|psi⟩ = alpha |0⟩ + beta |1⟩$ lives on the continuous surface of a complex unit sphere (the Bloch sphere), where $alpha, beta in CC$ and $|alpha|^2 + |beta|^2 = 1$.
@@ -117,7 +116,7 @@ The platform implements the following comprehensive 10-point concept dictionary:
   [#text(weight: "bold", size: 8.5pt)[What Student Knows]],
   [#text(weight: "bold", size: 8.5pt)[Quantum Counterpart]],
   [#text(weight: "bold", size: 8.5pt)[Key Conceptual Distinction]],
-  
+
   [Transistor], [Electronic switching device], [Qubit (2-level quantum system)], [Switch is macroscopic; qubit is a 2-dimensional complex vector space.],
   [ON / OFF], [Binary rails ($0" V"$ / $5" V"$)], [Measurement collapse ($0$ or $1$)], [Classical state is always definite; qubit is continuous until measured.],
   [Voltage/Current], [Physical observable signal], [Quantum statevector $|psi⟩$ / amplitudes], [Amplitudes $alpha, beta in CC$ possess phase; voltage is purely real scalar.],
@@ -251,7 +250,7 @@ The *TransistorToQubit* framework provides a pedagogically sound, mathematically
 
 = 7. References
 
-+ *Yanofsky, N. S., & Mannucci, M. A. (2008).* _Quantum Computing for Computer Scientists_. Cambridge University Press.  
++ *Yanofsky, N. S., & Mannucci, M. A. (2008).* _Quantum Computing for Computer Scientists_. Cambridge University Press.
   #text(size: 8.5pt, fill: rgb("#475569"))[
     (Fundamental textbook establishing quantum computing via linear algebra, tensor products, unitary transformations, and complex vector spaces tailored for computer scientists and engineers without requiring prior advanced quantum mechanics).
   ]

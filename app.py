@@ -29,7 +29,7 @@ def main():
         page_title="Transistor to Qubit",
         page_icon=APP_ICON,
         layout="wide",
-        initial_sidebar_state="expanded",
+        initial_sidebar_state="auto",
     )
 
     load_custom_css()
