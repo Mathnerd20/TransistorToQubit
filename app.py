@@ -50,7 +50,7 @@ def main():
         st.markdown("### 🧭 Navigation")
         selected_module_key = st.radio(
             "Select Module:",
-            options=["module1", "module2", "module3", "module4"],
+            options=list(MODULES),
             format_func=lambda k: MODULES[k]["title"],
             index=0,
             label_visibility="collapsed",
