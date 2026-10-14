@@ -9,6 +9,8 @@ import matplotlib.pyplot as plt
 from qiskit import QuantumCircuit
 from qiskit.quantum_info import Statevector
 from qiskit.visualization import plot_bloch_multivector, plot_histogram
+from qiskit.visualization.bloch import Bloch
+from qiskit.visualization.state_visualization import _bloch_multivector_data
 
 try:
     from qiskit_aer import AerSimulator
@@ -219,29 +221,50 @@ def draw_circuit_mpl(qc: QuantumCircuit):
 
 def draw_bloch_sphere(sv: Statevector):
     """
-    Renders Bloch sphere multivector for the given Statevector.
-    Adds Dirac-notation labels at poles (|0⟩, |1⟩) and equatorial points (|+⟩, |−⟩, |i⟩).
+    Renders an aesthetically styled Bloch sphere multivector for the given Statevector.
+    Features dark-theme styling and crisp, non-colliding Dirac-notation labels:
+    - North Pole: |0⟩ (+z)
+    - South Pole: |1⟩ (-z)
+    - Equatorial: |+⟩ (+x), |−⟩ (-x), |i⟩ (+y), |-i⟩ (-y)
     """
-    fig = plot_bloch_multivector(sv)
-    fig.patch.set_facecolor("#090d16")
-    for ax in fig.axes:
-        ax.set_facecolor("#090d16")
-        # Annotate poles and equator on every 3-D Bloch axis
-        if hasattr(ax, "get_zlim"):
-            try:
-                ax.text(0, 0, 1.38, "|0⟩", color="#73d0ff",
-                        fontsize=10, fontweight="bold", ha="center", va="center", zorder=10)
-                ax.text(0, 0, -1.48, "|1⟩", color="#d4bfff",
-                        fontsize=10, fontweight="bold", ha="center", va="center", zorder=10)
-                ax.text(1.52, 0, 0.06, "|+⟩", color="#bae67e",
-                        fontsize=8, fontweight="bold", ha="center", va="center", zorder=10)
-                ax.text(-1.52, 0, 0.06, "|−⟩", color="#ffcc66",
-                        fontsize=8, fontweight="bold", ha="center", va="center", zorder=10)
-                ax.text(0, 1.52, 0.06, "|i⟩", color="#f28779",
-                        fontsize=8, ha="center", va="center", zorder=10)
-            except Exception:
-                pass
-    return fig
+    try:
+        bloch_data = _bloch_multivector_data(sv)
+        num = len(bloch_data)
+        fig = plt.figure(figsize=(4.8 * num, 4.8), facecolor="#090d16")
+        for i, b_vec in enumerate(bloch_data):
+            ax = fig.add_subplot(1, num, i + 1, projection="3d")
+            ax.set_facecolor("#090d16")
+
+            b = Bloch(axes=ax, font_size=11)
+            b.font_color = "#f1f5f9"
+            b.frame_color = "#64748b"
+            b.sphere_color = "#38bdf8"
+            b.sphere_alpha = 0.08
+            b.vector_color = ["#00f0ff"]
+
+            # Crystal-clear cardinal labels
+            b.zlabel = ["|0⟩ (+z)", "|1⟩ (-z)"]
+            b.xlabel = ["|+⟩ (+x)", "|−⟩ (-x)"]
+            b.ylabel = ["|i⟩ (+y)", "|-i⟩ (-y)"]
+
+            # Position labels clearly outside the sphere without overlapping
+            b.zlpos = [1.28, -1.28]
+            b.xlpos = [1.32, -1.32]
+            b.ylpos = [1.32, -1.32]
+
+            b.add_vectors(b_vec)
+            b.render(title="")
+            if num > 1:
+                ax.set_title(f"Qubit {i} (q{i})", color="#38bdf8", fontsize=12, fontweight="bold", y=1.18)
+        fig.tight_layout()
+        return fig
+    except Exception:
+        # Fallback to default Qiskit plot_bloch_multivector
+        fig = plot_bloch_multivector(sv)
+        fig.patch.set_facecolor("#090d16")
+        for ax in fig.axes:
+            ax.set_facecolor("#090d16")
+        return fig
 
 
 def _simulate_with_statevector(qc_meas: QuantumCircuit, shots=1024):
