@@ -40,6 +40,10 @@
   text(weight: "bold", size: 10.2pt, fill: rgb("#334155"))[#it.body]
 )
 
+// Hyperlink styling: prominent blue with underline
+#show link: set text(fill: rgb("#0284c7"))
+#show link: underline.with(stroke: 0.8pt + rgb("#0284c7"), offset: 1.5pt)
+
 // Document Header
 #align(center)[
   #block(width: 100%, stroke: (bottom: 2pt + rgb("#0284c7")), inset: (bottom: 14pt))[
